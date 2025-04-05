@@ -1,5 +1,3 @@
-# Adolescent-Nucleus-Accumbens
-
 # HRM-THC snRNA-seq Analysis Pipeline
 
 This repository provides a comprehensive pipeline for processing and analyzing single-nucleus RNA-sequencing (snRNA-seq) data from HRM-THC experiments. The analysis includes raw data processing, quality control and doublet removal, normalization and clustering using SCTransform, differential gene expression (DEG) analysis, pathway enrichment, weighted gene co-expression network analysis (WGCNA), trait-module correlation, GWAS module association, weighted key driver analysis (wKDA), trajectory inference, conservation analysis, cell-to-cell communication, and gene regulatory network (GRN) analysis.
