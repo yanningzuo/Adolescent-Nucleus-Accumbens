@@ -60,7 +60,6 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 
 2. **Prepare the Environment:**
    - Install required software and R packages.
-   - Place raw data in the `data/raw/` directory.
 
 3. **Run the Pipeline:**
    - Execute each R script in sequential order as numbered in the `scripts/` directory.
