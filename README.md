@@ -47,9 +47,6 @@ This repository provides a comprehensive pipeline for processing and analyzing s
   - **12_cell_to_cell_communication.R**: Analyzes cell-cell interactions using LIANA.
   - **13_GRN_analysis.R**: Constructs gene regulatory networks using SCENIC.
 
-- **results/**
-  - Stores all output files, figures, and tables from the analyses.
-
 ## Getting Started
 
 1. **Clone the Repository:**
