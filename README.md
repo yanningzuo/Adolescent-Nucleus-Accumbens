@@ -24,8 +24,7 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 ## Repository Structure
 
 - **data/**
-  - **raw/**: Contains raw sequencing data and initial Cell Ranger outputs.
-  - **processed/**: Contains merged gene expression matrices and quality-controlled data.
+  - ?
 
 - **docs/**
   - **index.md**: Detailed documentation of the analysis workflow, including method descriptions and step-by-step pipeline instructions.
