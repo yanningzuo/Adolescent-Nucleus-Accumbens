@@ -19,8 +19,6 @@ This repository provides a comprehensive pipeline for processing and analyzing s
   - SCENIC (v1.3.1)
   - plus other packages: dplyr, ggplot2, stringr, patchwork, future, here, etc.
 
-*Note:* Please refer to each script’s header for additional package requirements and installation instructions.
-
 ## Repository Structure
 
 - **data/**
