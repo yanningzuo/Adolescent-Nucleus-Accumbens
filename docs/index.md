@@ -27,8 +27,6 @@ Raw data processing is performed externally using Cell Ranger. The processed out
 - Perform doublet detection with a pN value of 0.25 and an assumed doublet rate of 5%.
 - Save the quality-controlled Seurat object.
 
-*(See the header comments in the script for detailed usage instructions.)*
-
 ---
 
 ## 3. SCTransform Clustering and Cell Type Annotation
