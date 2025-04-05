@@ -58,10 +58,6 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 3. **Run the Pipeline:**
    - Execute each R script in sequential order as numbered in the `scripts/` directory.
    - Adjust file paths and parameters as needed based on your computing environment.
-
-4. **Review Outputs:**
-   - Analysis results will be saved in the `results/` folder.
-
 For further details on each analysis step, please refer to the [Documentation](./docs/index.md).
 
 ## License
