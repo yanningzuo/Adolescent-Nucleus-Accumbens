@@ -1,0 +1,140 @@
+### Mergeomics using OUD as an example
+## Marker set filtering (MDF)
+
+# prep GWAS summary stats
+
+GWAS <- read.delim("opi.DEPvEXP_trans.ancestry.noAF.tbl", stringsAsFactors = FALSE)
+GWAS = GWAS[, c("rsID","P.value")]
+GWAS$P.value = -log10(GWAS$P.value)
+colnames(GWAS) = c("LOCUS", "VALUE")
+write.table(GWAS, "2020_OUD.txt", row.names = FALSE, quote = FALSE, sep = "\t")
+
+# MDF
+
+cd /gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/OUD/MDF/bash
+chmod +x /gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/bin/ldprune
+export PATH=$PATH:/gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/bin/
+
+export PATH=$PATH:/gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/OUD/MDF/bash/
+chmod u+x oud_distance_20kb.bash
+/gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/OUD/MDF/bash/oud_distance_20kb.bash
+
+chmod u+x oud_eqtl-nac.bash
+oud_eqtl-nac.bash
+
+chmod u+x oud_sqtl-nac.bash
+oud_sqtl-nac.bash
+
+## Marker set enrichment analysis (MSEA)
+
+library(ggtern)
+source("/gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/Mergeomics_YZ_2020_v2.R")
+path = "/gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/OUD/"
+trait.item = 'OUD'
+trim = '0.005'
+trim = as.numeric(trim)	
+name = 'NAc-module-DEG'
+dir.create(file.path(path, name))
+setwd(file.path(path, name))
+
+mapping = c("distance", "NAc-eqtl", "NAc-sqtl")
+for(item in mapping){
+    job.ssea <- list()
+    job.ssea$label <- paste(trait.item, item, sep = ".")
+    job.ssea$folder <- file.path(path, name)
+    job.ssea$genfile <- paste0(path, "MDF/", item, "_genes.txt")
+    job.ssea$locfile <- paste0(path, "MDF/", item, "_loci.txt")
+    job.ssea$modfile <- paste0("/gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/", name, "_combined_module.txt")
+    job.ssea$inffile <- paste0("/gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/", name, "_combined_module_info.txt")
+    job.ssea$permtype <- "gene"	#optional
+    job.ssea$maxgenes <- 1000	#optional
+    job.ssea$nperm <- 10000	#optional
+    job.ssea <- ssea.start(job.ssea)
+    job.ssea <- ssea.prepare(job.ssea)
+    job.ssea <- ssea.control(job.ssea)
+    job.ssea <- ssea.analyze(job.ssea, trim_start = trim, trim_end =(1 - trim))
+    job.ssea <- ssea.finish(job.ssea)
+}
+
+## post-MSEA analysis
+# read in results files from MSEA
+results = data.frame(stringsAsFactors = FALSE)
+for (item in mapping){
+    temp = read.delim(paste0(path, name, "/msea/", trait.item, ".", item, ".results.txt"), stringsAsFactors = FALSE)
+    temp$Mapping = item
+    results <- rbind(results, temp)
+}
+
+results = results[results$FDR<0.05 & results$MODULE!="_ctrlA" & results$MODULE!="_ctrlB",]
+write.table(results, "MSEA_compiled_results.txt", row.names = FALSE, quote = FALSE, sep = "\t")
+
+# trim reoccuring modules
+reoccuring = results$MODULE[duplicated(results$MODULE)]
+for(row in 1:nrow(results)){
+  if(sum(results$MODULE[row]==reoccuring)==0){
+    next
+  }
+  else{
+    mappings = results$Mapping[results$MODULE==results$MODULE[row]][-1]
+    for(m in mappings){
+      results$Mapping[row] = paste0(results$Mapping[row], ", ",
+                                   results$Mapping[results$MODULE==results$MODULE[row] &
+                                                     results$Mapping==m], ": ",
+                                   results$FDR[results$MODULE==results$MODULE[row] &
+                                                     results$Mapping==m], " ")
+    }
+  }
+}
+results = results[!duplicated(results$MODULE),] # preserves FDR but not other information
+
+# get gene length of modules
+all_modules <- read.delim(paste0("/gpfs/data01/teleselab/y3zuo/HRM-THC/Mergeomics/", name, "_combined_module.txt"), stringsAsFactors = FALSE)
+signif_modules = unique(results$MODULE)
+geneNum = c()
+for(mod in signif_modules){
+  geneNum = append(geneNum, sum(all_modules$MODULE==mod))
+}
+results$ModuleGeneCount = geneNum
+write.table(results, "MSEA_trimmed_compiled_results.txt", row.names = FALSE, quote = FALSE, sep = "\t")
+
+selected_modules = data.frame(stringsAsFactors = FALSE)
+for(mod in signif_modules){
+  selected_modules = rbind(selected_modules, all_modules[all_modules$MODULE==mod, ])
+}
+colnames(selected_modules) = c("MODULE", "NODE")
+write.table(selected_modules, "Significant_modules.txt", row.names = FALSE, quote = FALSE, sep = "\t")
+
+## Key driver analysis
+
+source("~/Desktop/Scripts/Mergeomics_YZ_2020_v2.R")
+brainNet <- "~/Desktop/Scripts/brainNet_v1v3.txt"
+
+job.kda <- list()
+job.kda$label <- "KDA"
+job.kda$folder <- "OUD" 
+job.kda$netfile <- brainNet 
+job.kda$modfile <- "Significant_modules.txt"
+
+## "0" means we do not consider edge weights while 1 is opposite.
+job.kda$edgefactor <- 1
+## The searching depth for the KDA
+job.kda$depth <- 1
+## 0 means we do not consider the directions of the regulatory interactions
+## while 1 is opposite.
+job.kda$direction <- 0
+job.kda$nperm <- 10000 # 10000 for formal analysis 
+
+moddata <- tool.read(job.kda$modfile)
+mod.names <- unique(moddata$MODULE)
+moddata <- moddata[which(!is.na(match(moddata$MODULE, mod.names))), ]
+## save this to a temporary file and set its path as new job.kda$modfile:
+tool.save(moddata, "subsetof.supersets.txt")
+job.kda$modfile <- "subsetof.supersets.txt"
+
+job.kda <- kda.configure(job.kda)
+job.kda <- kda.start(job.kda)
+job.kda <- kda.prepare(job.kda)
+job.kda <- kda.analyze(job.kda)
+job.kda <- kda.finish(job.kda)
+
+job.kda <- kda2cytoscape(job.kda, ndrivers = 10)
