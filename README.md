@@ -1,63 +1,63 @@
 # Adolescent-Nucleus-Accumbens
 
-This repository provides a comprehensive pipeline for processing and analyzing single-nucleus RNA-sequencing (snRNA-seq) data from HRM (Heterozygous Reeler Mouse) -THC experiments. The analysis includes raw data processing, quality control and doublet removal, normalization and clustering using SCTransform, differential gene expression (DEG) analysis, pathway enrichment, weighted gene co-expression network analysis (WGCNA), trait-module correlation, GWAS module association, weighted key driver analysis (wKDA), trajectory inference, conservation analysis, cell-to-cell communication, and gene regulatory network (GRN) analysis.
+This repository provides a comprehensive pipeline for processing and analyzing single-nucleus RNA-sequencing (snRNA-seq) data from HRM (Heterozygous Reeler Mouse) - THC experiments. The analysis includes raw data processing, quality control, normalization, differential expression, network modeling, and cross-age conservation analysis.
 
 ## Requirements
 
-- **Software:**
-  - [Cell Ranger](https://support.10xgenomics.com/) (v6.0.2 for raw processing, v6.0.1 for aggregation)
-  - R (version 4.x or above)
-  
-- **R Packages:**
-  - Seurat (v4.9.9.9058)
-  - DoubletFinder (v2.0.3)
-  - enrichR
-  - WGCNA
-  - Mergeomics
-  - Monocle3
-  - LIANA (v0.1.14)
-  - SCENIC (v1.3.1)
-  - plus other packages: dplyr, ggplot2, stringr, patchwork, future, here, etc.
+* **Software:**
+* [Cell Ranger](https://support.10xgenomics.com/) (v6.0.1 used for aggregation)
+* R (version 4.x or above)
+
+
+* **Key R Packages:**
+* **Seurat (v4.x):** Core analysis framework
+* **DoubletFinder:** Doublet detection
+* **WGCNA:** Co-expression network construction
+* **LIANA:** Ligand-receptor communication
+* **SCENIC:** Gene regulatory network inference
+* **Monocle3:** Trajectory inference
+* **Mergeomics:** MSEA and Key Driver Analysis
+
+
 
 ## Repository Structure
 
-- **data/**
-  - ?
+* **docs/**: `index.md` workflow guide.
+* **scripts/**:
+* **01_Raw_Processing.R**: CellRanger aggregation.
+* **02_QC_Doublet_Removal.R**: Filtering and DoubletFinder.
+* **03_SCT_Clustering_Annotation.R**: SCTransform and cell typing.
+* **04_DEG_Pathway_Analysis.R**: DEGs and EnrichR (Merged Step 05).
+* **05_WGCNA_Module_Enrichment.R**: Network building and module GO.
+* **06_WGCNA_Trait_Correlation.R**: Module-trait associations.
+* **07_Mergeomics_MSEA_KDA.R**: GWAS integration and hub gene identification.
+* **08_Monocle3_Trajectory_Analysis.R**: Pseudotime inference.
+* **09_CrossAge_Conservation_Analysis.R**: Adolescent vs. Adult comparison.
+* **10_LIANA_Communication_Analysis.R**: Ligand-receptor signaling.
+* **11_SCENIC_Regulon_Analysis.R**: Transcription factor networks.
 
-- **docs/**
-  - **index.md**: Detailed documentation of the analysis workflow, including method descriptions and step-by-step pipeline instructions.
 
-- **scripts/**
-  - **01_raw_processing.R**: Processes raw sequencing data with Cell Ranger.
-  - **02_quality_control_doublet_removal.R**: Performs quality control and doublet removal using Seurat and DoubletFinder.
-  - **03_sct_clustering_annotation.R**: Conducts SCTransform normalization, PCA, clustering, and cell type annotation.
-  - **04_DEG_analysis.R**: Identifies differentially expressed genes (DEGs) for treatment and genotype comparisons.
-  - **05_pathway_annotation.R**: Performs pathway enrichment analysis using enrichR.
-  - **06_WGCNA_analysis.R**: Builds weighted gene co-expression networks for each cell subtype.
-  - **07_trait_module_correlation.R**: Correlates module eigengenes with treatment and genotype traits.
-  - **08_GWAS_module_association.R**: Maps co-expression modules to human GWAS traits.
-  - **09_wKDA.R**: Identifies key driver genes via weighted key driver analysis.
-  - **10_trajectory_analysis.R**: Infers pseudotime trajectories using Monocle3.
-  - **11_conservation_analysis.R**: Compares cell type profiles across species and studies.
-  - **12_cell_to_cell_communication.R**: Analyzes cell-cell interactions using LIANA.
-  - **13_GRN_analysis.R**: Constructs gene regulatory networks using SCENIC.
 
 ## Getting Started
 
 1. **Clone the Repository:**
-    ```sh
-    git clone https://github.com/yourusername/HRM-THC-snRNAseq.git
-    cd HRM-THC-snRNAseq
-    ```
+```sh
+git clone https://github.com/NumaanFormoli/Adolescent-Nucleus-Accumbens.git
+cd Adolescent-Nucleus-Accumbens
+
+```
+
 
 2. **Prepare the Environment:**
-   - Install required software and R packages.
+* Install required R packages and ensure Cell Ranger is in your PATH.
+
 
 3. **Run the Pipeline:**
-   - Execute each R script in sequential order as numbered in the `scripts/` directory.
-   - Adjust file paths and parameters as needed based on your computing environment.
-For further details on each analysis step, please refer to the [Documentation](./docs/index.md).
+* Execute each R script in sequential order (01 to 11).
+* **Note:** Update `setwd()` and file paths in each script to match your local server environment.
+
+
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](https://www.google.com/search?q=LICENSE).
