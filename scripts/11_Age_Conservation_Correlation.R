@@ -115,9 +115,11 @@ for (ident in colnames(nac)){
     marker[[ident]] = genes
 }
 
-marker = marker[-1]marker = unique(marker)
+marker = marker[-1]
+marker = unique(marker)
 
-adolescence <- adolescence[which(rownames(adolescence) %in% marker), ]adult <- adult[which(rownames(adult) %in% marker), ]
+adolescence <- adolescence[which(rownames(adolescence) %in% marker), ]
+adult <- adult[which(rownames(adult) %in% marker), ]
 
 cor <- ""
 p <- ""
