@@ -1,88 +1,129 @@
 # HRM-THC snRNA-seq Analysis Pipeline Documentation
 
-This document provides a detailed overview of the analysis workflow for the HRM-THC snRNA-seq project. The pipeline is modularized into several steps, each implemented as an R script in the `scripts/` directory. The scripts have been directly converted from your existing code files and include detailed header comments.
+This document provides a detailed overview of the analysis workflow for the HRM-THC snRNA-seq project. The pipeline is modularized into **11 sequential steps**, each implemented as an R script in the `scripts/` directory. 
 
 ---
 
 ## 1. Raw Data Processing
 
-*Note:*  
-Raw data processing is performed externally using Cell Ranger. The processed output (e.g., `filtered_feature_bc_matrix.h5`) should be placed in the `data/processed/` folder for further analysis in R.
+**Script:** `01_Raw_Processing.R`
 
----
+* **Purpose:** Aggregates multiple 10x Genomics libraries into a single experiment using `cellranger aggr` without normalization to preserve biological variance for downstream SCTransform. 
+
+
 
 ## 2. Quality Control and Doublet Removal
 
-**Script:** `02_quality_control_doublet_removal.R`
+**Script:** `02_QC_Doublet_Removal.R`
 
-**Purpose:**  
-- Load the merged gene expression matrix (from Cell Ranger) into a Seurat object.
-- Calculate QC metrics such as RNA counts, gene counts, and percentages for mitochondrial and ribosomal genes.
-- Apply filtering criteria to remove low-quality nuclei.
-- Detect and remove doublets using DoubletFinder.
+* **Purpose:** Filters the aggregated dataset for low-quality nuclei and removes doublets. 
 
-**Key Steps:**
-- Compute metrics using `PercentageFeatureSet()`.
-- Filter cells based on thresholds (e.g., 500 < nFeature_RNA < 6000, nCount_RNA between 1000 and 16000, <2% mitochondrial genes).
-- Perform doublet detection with a pN value of 0.25 and an assumed doublet rate of 5%.
-- Save the quality-controlled Seurat object.
 
----
+* **Key Steps:** Filters based on `nFeature_RNA` (500-6000), `nCount_RNA` (1000-16000), and mitochondrial percentage (<2%). Doublets are identified and removed using the **DoubletFinder** package with a pN of 0.25. 
 
-## 3. SCTransform Clustering and Cell Type Annotation
 
-**Script:** `03_sct_clustering_annotation.R`
 
-**Purpose:**  
-- Normalize the quality-controlled data using SCTransform, regressing out unwanted variation (e.g., percent.mt, nCount_RNA).
-- Perform dimensionality reduction (PCA and UMAP) and cluster the cells.
-- Annotate clusters using canonical markers (e.g., Snap25, Syt1 for neurons; Gja1 for astrocytes).
+## 3. SCTransform Clustering and Annotation
 
-**Key Steps:**
-- Apply SCTransform normalization.
-- Run PCA and UMAP to reduce dimensionality.
-- Cluster cells using `FindClusters()` with an appropriate resolution (e.g., 0.7).
-- Optionally, rename clusters based on marker expression.
-- Save the annotated Seurat object.
+**Script:** `03_SCT_Clustering_Annotation.R`
 
----
+* **Purpose:** Normalizes data and defines cell identities. 
 
-## 4. Differential Gene Expression (DEG) Analysis
 
-**Script:** `04_DEG_analysis.R`
+* **Key Steps:** Uses `SCTransform` to regress out mitochondrial and ribosomal bias. Clusters cells using 50 PCs and a resolution of 0.7 before annotating "coarse" and "detailed" cell types based on canonical markers like *Snap25*, *Gad1*, and *Drd1*. 
 
-**Purpose:**  
-- Identify differentially expressed genes (DEGs) comparing THC-treated vs. Vehicle and Het vs. WT within each cell cluster.
-- Filter DEGs based on significance thresholds (e.g., FDR < 0.05, fold change thresholds).
 
-**Key Steps:**
-- Use Seurat’s `FindMarkers()` function for DEG detection.
-- Filter results to retain significant DEGs (based on z-scores and adjusted p-values).
-- Save DEG results for downstream pathway enrichment and further analysis.
 
----
+## 4. DEG and Pathway Analysis
 
-## 5. Cell-to-Cell Communication Analysis
+**Script:** `04_DEG_Pathway_Analysis.R`
 
-**Script:** `12_cell_to_cell_communication.R`
+* **Purpose:** Identifies genes altered by Genotype or Treatment and interprets their biological meaning. 
 
-**Purpose:**  
-- Analyze cell–cell interactions using LIANA.
-- Convert LIANA's consensus resource to mouse orthologs.
-- Run LIANA, aggregate the results, and filter significant interactions (aggregate rank ≤ 0.01).
 
-**Key Steps:**
-- Set up LIANA with a custom external resource.
-- Execute `liana_wrap()` and `liana_aggregate()` to obtain interaction data.
-- Visualize the interactions (e.g., with a dot plot).
-- Save the LIANA analysis results.
+* **Key Steps:** Runs `FindMarkers` to identify Differentially Expressed Genes (DEGs) for "Het" and "THC" conditions. Significant DEGs (FDR < 0.05 and ) are processed through **EnrichR** using KEGG, GO, and Reactome databases. 
+
+
+
+## 5. WGCNA Module Enrichment
+
+**Script:** `05_WGCNA_Module_Enrichment.R`
+
+* **Purpose:** Constructs co-expression networks to find groups of highly correlated genes (modules). 
+
+
+* **Key Steps:** Calculates soft-thresholding power for scale-free topology, builds a signed network, and identifies modules using dynamic tree cutting. Each module is then annotated for functional enrichment via **EnrichR**. 
+
+
+
+## 6. WGCNA Trait Correlation
+
+**Script:** `06_WGCNA_Trait_Correlation.R`
+
+* **Purpose:** Statistically links gene modules to experimental metadata (Genotype/Treatment). 
+
+
+* **Key Steps:** Calculates the correlation between module eigengenes (MEs) and external traits to identify which biological pathways are most affected by the experiment. 
+
+
+
+## 7. Mergeomics (MSEA and KDA)
+
+**Script:** `07_Mergeomics_MSEA_KDA.R`
+
+* **Purpose:** Integrates WGCNA modules with external GWAS data (e.g., OUD). 
+
+
+* **Key Steps:** Performs Marker Set Enrichment Analysis (**MSEA**) to find trait-associated modules and Key Driver Analysis (**KDA**) using a brain-specific network to identify "hub" genes. 
+
+
+
+## 8. Monocle3 Trajectory Analysis
+
+**Script:** `08_Monocle3_Trajectory_Analysis.R`
+
+* **Purpose:** Models the developmental progression of interneurons, neuroblasts, and NPCs. 
+
+
+* **Key Steps:** Infers a "pseudotime" path using **Monocle3**, allowing for the visualization of gene expression changes across a cellular differentiation gradient. 
+
+
+
+## 9. Cross-Age Conservation Analysis
+
+**Script:** `09_CrossAge_Conservation_Analysis.R`
+
+* **Purpose:** Compares the transcriptomic landscape of Adolescent NAc against Adult NAc (P70). 
+
+
+* **Key Steps:** Generates cell-type specific t-statistics for both datasets and uses **Pearson Correlation** to determine if cellular identities and marker genes are conserved across development. 
+
+
+
+## 10. LIANA Communication Analysis
+
+**Script:** `10_LIANA_Communication_Analysis.R`
+
+* **Purpose:** Maps ligand-receptor signaling interactions between cell types. 
+
+
+* **Key Steps:** Uses the **LIANA** framework to aggregate multiple interaction resources, specifically focusing on signaling between interneuron subpopulations and neuroblasts. 
+
+
+
+## 11. SCENIC Regulon Analysis
+
+**Script:** `11_SCENIC_Regulon_Analysis.R`
+
+* **Purpose:** Reconstructs transcription factor (TF) regulatory networks. 
+
+
+* **Key Steps:** Uses the **SCENIC** pipeline to identify "Regulons" (TFs and their targets) and calculates a **Regulon Specificity Score (RSS)** to identify TFs driving specific GABAergic identities. 
+
+
 
 ---
 
 ## Running the Pipeline
 
-Before running the pipeline, ensure that:
-- You change directory names
-- The R packages and software dependencies are installed.
-
-Execute the scripts in the order listed above to perform a complete analysis of your snRNA-seq data.
+Execute the scripts in the numerical order listed above (01 to 11). Ensure all file paths in the `load()` and `read.csv()` functions are updated to reflect your local environment or server directory structure.
