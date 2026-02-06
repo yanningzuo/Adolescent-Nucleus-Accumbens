@@ -42,7 +42,7 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 
 1. **Clone the Repository:**
 ```sh
-git clone https://github.com/NumaanFormoli/Adolescent-Nucleus-Accumbens.git
+git clone https://github.com/ftlabucsd/Adolescent-Nucleus-Accumbens.git
 cd Adolescent-Nucleus-Accumbens
 
 ```
