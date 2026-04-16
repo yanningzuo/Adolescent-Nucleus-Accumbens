@@ -4,12 +4,12 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 
 ## Requirements
 
-* **Software:**
+**Software:**
 * [Cell Ranger](https://support.10xgenomics.com/) (v6.0.1 used for aggregation)
 * R (version 4.x or above)
+* Python (version 3.10.18)
 
-
-* **Key R Packages:**
+**Key R Packages:**
 * **Seurat (v4.x):** Core analysis framework
 * **DoubletFinder:** Doublet detection
 * **WGCNA:** Co-expression network construction
@@ -18,6 +18,10 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 * **Monocle3:** Trajectory inference
 * **Mergeomics:** MSEA and Key Driver Analysis
 
+**Key Python Packages:**
+* **Scanpy (v.):** Python Single Cell analysis framework
+* **Liana+ (v.):** Cell to Cell comunication inference
+* **cell2cell (v.):** Tensor Cell2Cell factorization analysis
 
 
 ## Repository Structure
@@ -35,6 +39,7 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 * **09_CrossAge_Conservation_Analysis.R**: Adolescent vs. Adult comparison.
 * **10_LIANA_Communication_Analysis.R**: Ligand-receptor signaling.
 * **11_SCENIC_Regulon_Analysis.R**: Transcription factor networks.
+* **12_DEG_Bootstrapping.R**: DEG analysis for treatment groups using bootstrapping.
 
 
 
@@ -50,12 +55,11 @@ cd Adolescent-Nucleus-Accumbens
 
 2. **Prepare the Environment:**
 * Install required R packages and ensure Cell Ranger is in your PATH.
-
+* Install required Python packages.
 
 3. **Run the Pipeline:**
-* Execute each R script in sequential order (01 to 11).
+* Execute each R script in sequential order (01 to 13).
 * **Note:** Update `setwd()` and file paths in each script to match your local server environment.
-
 
 
 ## License
