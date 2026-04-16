@@ -39,7 +39,7 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 * **09_CrossAge_Conservation_Analysis.R**: Adolescent vs. Adult comparison.
 * **10_LIANA_Communication_Analysis.R**: Ligand-receptor signaling.
 * **11_SCENIC_Regulon_Analysis.R**: Transcription factor networks.
-* **12_DEG_Bootstrapping.R**: DEG analysis for treatment groups using bootstrapping.
+* **12_DEG_Bootstrapping/**: DEG analysis for treatment groups using bootstrapping. (Directory)
 
 
 
@@ -64,4 +64,4 @@ cd Adolescent-Nucleus-Accumbens
 
 ## License
 
-This project is licensed under the [MIT License](https://www.google.com/search?q=LICENSE).
+This project is licensed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License).

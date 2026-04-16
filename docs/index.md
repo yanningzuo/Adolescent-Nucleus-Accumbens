@@ -120,10 +120,15 @@ This document provides a detailed overview of the analysis workflow for the HRM-
 
 * **Key Steps:** Uses the **SCENIC** pipeline to identify "Regulons" (TFs and their targets) and calculates a **Regulon Specificity Score (RSS)** to identify TFs driving specific GABAergic identities. 
 
+## 12. Bootstrapping based DEG Analysis
+**Directory:** `12_DEG_Bootstrapping`
+* **Purpose:** Find differentially-expressed genes between treatment and genotype groups.
 
+
+* **Key Steps:** Samples 61,911 cells with replacement for 1,000 iterations such that sizes of groups was kept constant. Ran Seurat's FindMarkers between the groups to find DEGs.
 
 ---
 
 ## Running the Pipeline
 
-Execute the scripts in the numerical order listed above (01 to 11). Ensure all file paths in the `load()` and `read.csv()` functions are updated to reflect your local environment or server directory structure.
+Execute the scripts in the numerical order listed above (01 to 12). Ensure all file paths in the `load()` and `read.csv()` functions are updated to reflect your local environment or server directory structure.
