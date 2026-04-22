@@ -127,8 +127,14 @@ This document provides a detailed overview of the analysis workflow for the HRM-
 
 * **Key Steps:** Samples 61,911 cells with replacement for 1,000 iterations such that sizes of groups was kept constant. Ran Seurat's FindMarkers between the groups to find DEGs.
 
+## 13. Liana+ and cell2cell based cell-cell communication factorization analysis
+**Notebook:** `13_LIANA+_C2C_Analysis.ipynb`
+* **Purpose:** Determine how THC treatment affects intercellular communication patterns.
+
+
+* **Key Steps:** Uses Liana+ to construct a 4 dimensional tensor across contexts (Treatments), sender cell types, reciever cell types, and ligand-receptor pairs.
 ---
 
 ## Running the Pipeline
 
-Execute the scripts in the numerical order listed above (01 to 12). Ensure all file paths in the `load()` and `read.csv()` functions are updated to reflect your local environment or server directory structure.
+Execute the scripts in the numerical order listed above (01 to 13). Ensure all file paths in the `load()` and `read.csv()` functions are updated to reflect your local environment or server directory structure.

@@ -19,10 +19,10 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 * **Mergeomics:** MSEA and Key Driver Analysis
 
 **Key Python Packages:**
-* **Scanpy (v.):** Python Single Cell analysis framework
-* **Liana+ (v.):** Cell to Cell comunication inference
-* **cell2cell (v.):** Tensor Cell2Cell factorization analysis
-
+* **Scanpy (v. 1.9.3):** Python Single Cell analysis framework
+* **Liana+ (v. 1.5.1):** Cell to Cell comunication inference
+* **cell2cell (v. 0.7.4):** Tensor Cell2Cell factorization analysis
+* **torch (v. >=1.12.1):** Torch backend used for factorization analysis
 
 ## Repository Structure
 
@@ -40,6 +40,7 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 * **10_LIANA_Communication_Analysis.R**: Ligand-receptor signaling.
 * **11_SCENIC_Regulon_Analysis.R**: Transcription factor networks.
 * **12_DEG_Bootstrapping/**: DEG analysis for treatment groups using bootstrapping. (Directory)
+* **13_LIANA+_C2C_Analysis.ipynb:** Liana+ and cell2cell based cell-cell communication factorization analysis.
 
 
 
