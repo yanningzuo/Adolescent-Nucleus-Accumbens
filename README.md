@@ -1,6 +1,6 @@
 # Adolescent-Nucleus-Accumbens
 
-This repository provides a comprehensive pipeline for processing and analyzing single-nucleus RNA-sequencing (snRNA-seq) data from heterozygous reeler mice treated with vehicle and THC during adolescence. The analysis includes raw data processing, quality control, normalization, differential expression, gene co-expression network modeling, and cross-age conservation analysis.
+This repository provides a comprehensive pipeline for processing and analyzing single-nucleus RNA-sequencing (snRNA-seq) data from heterozygous reeler mice treated with vehicle and THC during adolescence. The analysis includes raw data processing, quality control, normalization, differential expression, gene co-expression network modeling, cross-age conservation analysis, cell-cell communication analysis, and DEG analysis using bootstrapping.
 
 ## Requirements
 
