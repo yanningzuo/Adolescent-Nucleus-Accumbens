@@ -14,8 +14,8 @@ plan("multicore", workers = 8)
 ## Conservation analysis between Adult NAc P70 and adolescent NAc
 
 # Adolescent NAc t-stat prep
-load("~/Desktop/HRM-THC-snRNA-seq/Merged/20230123_SCT_noGlut-61911.RData")
-setwd("~/Desktop/HRM-THC-snRNA-seq/Merged")
+load("./Merged/20230123_SCT_noGlut-61911.RData")
+setwd("./Merged")
 
 DefaultAssay(data) <- "SCT"
 Idents(object = data) <- data@meta.data$detailed.celltype
@@ -48,7 +48,7 @@ save(t.stats, file = "t-stats.Rdata")
 
 # Adult NAc P70 t-stat prep
 
-setwd("~/Desktop/HRM-THC-snRNA-seq/Adult-NAc")
+setwd("./Adult-NAc")
 
 data <- read.csv("GSE118020_expression_matrix.csv.gz")
 rownames(data) <- data$X
@@ -90,11 +90,11 @@ t.stats = t.stats[, -1]
 save(t.stats, file = "adult_t-stats.Rdata")
 
 # conservation analysis
-load("~/Desktop/HRM-THC-snRNA-seq/Merged/t-stats.RData")
+load("./Merged/t-stats.RData")
 
 adolescence = t.stats
 
-load("~/Desktop/HRM-THC-snRNA-seq/Merged/adult_t-stats.RData")
+load("./Merged/adult_t-stats.RData")
 
 adult = t.stats
 
@@ -104,7 +104,7 @@ adolescence <- adolescence[which(rownames(adolescence) %in% shared.genes), ]
 adult <- adult[which(rownames(adult) %in% shared.genes), ]
 
 # test with markers
-load("~/Desktop/HRM-THC-snRNA-seq/Merged/20230123_SCT_noGlut-61911.RData")
+load("./Merged/20230123_SCT_noGlut-61911.RData")
 
 marker = list()
 for (ident in colnames(nac)){
@@ -138,11 +138,11 @@ for (i in 1:dim(adolescence)[2]){
 cor = cor[, -1]
 p = p[, -1]
 
-colnames(cor) = colnames(nac)
-rownames(cor) = colnames(pfc)
+colnames(cor) = colnames(adolescence)
+rownames(cor) = colnames(adult)
 
-colnames(p) = colnames(nac)
-rownames(p) = colnames(pfc)
+colnames(p) = colnames(adolescence)
+rownames(p) = colnames(adult)
 
 cor <- as.matrix(cor)
 p <- as.matrix(p)

@@ -19,7 +19,7 @@ library(Matrix.utils)
 library(magrittr)
 library(DESeq2)
 
-load("~/Desktop/HRM-THC-snRNA-seq/Merged/20250324.RData")
+load("./Merged/20250324.RData")
 
 ## Extract Counts and Metadata
 
@@ -87,9 +87,9 @@ pb <- split.data.frame(pb,factor(splitf)) %>%
 
 metadata <- metadata[, c(1, 4, 5, 16)]
 
-save.image("~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/20260504_pseudobulk-detailed.RData")
+save.image("./Merged/DEGs/20260504_DESeq2/20260504_pseudobulk-detailed.RData")
 
-save.image("~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Broad/20260504_pseudobulk-broad.RData")
+save.image("./Merged/DEGs/20260504_DESeq2/Broad/20260504_pseudobulk-broad.RData")
 
 
 # =============================================================================
@@ -98,8 +98,8 @@ save.image("~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Broad/202605
 
 library(DESeq2)
 
-load("~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Broad/20260504_pseudobulk-broad.RData")
-path = "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/Broad/"
+load("./Merged/DEGs/20260504_DESeq2/Broad/20260504_pseudobulk-broad.RData")
+path = "./Merged/DEGs/20260504_DESeq2/Covariate_depth/Broad/"
 
 for (cluster in names(pb)){
     work.path = paste0(file.path(path, cluster), "/")
@@ -182,7 +182,7 @@ for (cluster in names(pb)){
 
 library(WriteXLS)
 
-input_paths = "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/Broad/"
+input_paths = "./Merged/DEGs/20260504_DESeq2/Covariate_depth/Broad/"
 cell.types = list.files(input_paths)
 
 result = list()
@@ -197,15 +197,15 @@ for (clu in cell.types){
     }
 }
 
-WriteXLS(result, "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/DESeq2_broad-cell-type_DEGs.xlsx", names(result), row.names = TRUE)
+WriteXLS(result, "./Merged/DEGs/20260504_DESeq2/Covariate_depth/DESeq2_broad-cell-type_DEGs.xlsx", names(result), row.names = TRUE)
 
 
 # =============================================================================
 # Part 3: DESeq2 — Detailed cell types (with reading depth as covariate)
 # =============================================================================
 
-load("~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Detailed/20260504_pseudobulk-detailed.RData")
-path = "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/"
+load("./Merged/DEGs/20260504_DESeq2/Detailed/20260504_pseudobulk-detailed.RData")
+path = "./Merged/DEGs/20260504_DESeq2/Covariate_depth/"
 
 for (cluster in names(pb)){
     work.path = paste0(file.path(path, cluster), "/")
@@ -286,7 +286,7 @@ for (cluster in names(pb)){
 
 ## Compile results into single excel files
 
-input_paths = "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/"
+input_paths = "./Merged/DEGs/20260504_DESeq2/Covariate_depth/"
 cell.types = list.files(input_paths)
 
 result = list()
@@ -301,7 +301,7 @@ for (clu in cell.types){
     }
 }
 
-WriteXLS(result, "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/DESeq2_detailed-cell-type_DEGs.xlsx", names(result), row.names = TRUE)
+WriteXLS(result, "./Merged/DEGs/20260504_DESeq2/Covariate_depth/DESeq2_detailed-cell-type_DEGs.xlsx", names(result), row.names = TRUE)
 
 
 # =============================================================================
@@ -318,7 +318,7 @@ library(ggrepel)
 
 ## DEG list
 
-path = "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/Detailed/"
+path = "./Merged/DEGs/20260504_DESeq2/Covariate_depth/Detailed/"
 cell.types = list.files(path)
 
 thc.deg <- list()
@@ -506,7 +506,7 @@ p1 / p2 / p3
 
 # all DEGs - detailed cell type
 
-path = "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/Detailed/"
+path = "./Merged/DEGs/20260504_DESeq2/Covariate_depth/Detailed/"
 cell.types = list.files(path)
 
 thc.deg.all <- list()
@@ -628,7 +628,7 @@ ggplot2::ggsave("20260529_volcano-DESeq2.pdf", plot = p, width = 20, height = 25
 
 # all DEGs - broad cell type
 
-path = "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/Broad/"
+path = "./Merged/DEGs/20260504_DESeq2/Covariate_depth/Broad/"
 cell.types = list.files(path)
 
 thc.deg.all <- list()
@@ -751,7 +751,7 @@ ggplot2::ggsave("20260611_volcano-DESeq2-broad.pdf", plot = p, width = 20, heigh
 
 ## Overlap between single-cell DEGs and DESeq2 pseudobulk
 
-load("/Users/yanningzuo/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20230803_DEGs/DEG.RData")
+load("./Merged/DEGs/20230803_DEGs/DEG.RData")
 names(reln.markers)[which(names(reln.markers) == "GABA-1 (Cdh18+)")] <- "In-1"
 names(reln.markers)[which(names(reln.markers) == "GABA-2 (Tiam2+)")] <- "NB-1"
 names(reln.markers)[which(names(reln.markers) == "GABA-3 (St18+ Kit+)")] <- "In-2"
@@ -877,4 +877,4 @@ for (j in 1:length(markers.list)){
     result[[names(markers.list)[j]]] <- deg.overlap
 
 }
-WriteXLS(result, "~/Desktop/HRM-THC-snRNA-seq/Merged/DEGs/20260504_DESeq2/Covariate_depth/Seurat-DESeq2-DEG-overlap.xlsx", names(result), row.names = TRUE)
+WriteXLS(result, "./Merged/DEGs/20260504_DESeq2/Covariate_depth/Seurat-DESeq2-DEG-overlap.xlsx", names(result), row.names = TRUE)

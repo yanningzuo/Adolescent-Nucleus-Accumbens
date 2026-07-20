@@ -1,5 +1,4 @@
-setwd("~/Desktop/HRM-THC-snRNA-seq/Merged")
-load("~/Desktop/HRM-THC-snRNA-seq/Merged/20230123_SCT_noGlut-61911.RData")
+load("./Merged/20230123_SCT_noGlut-61911.RData")
 
 library(Seurat)
 set.seed(12)
@@ -15,7 +14,7 @@ DefaultAssay(data) <- "RNA"
 Idents(object = data) <- data@meta.data[["detailed.celltype"]]
 data <- NormalizeData(object = data, normalization.method = "LogNormalize")
 
-outpath = "~/Desktop/HRM-THC-snRNA-seq/WGCNA-RNA/Inputs/"
+outpath = "./WGCNA-RNA/Inputs/"
 
 for(group in levels(data@active.ident)) {
     group.cells <- WhichCells(object = data, idents = group)
@@ -28,13 +27,13 @@ for(group in levels(data@active.ident)) {
 library(WGCNA)
 library(flashClust)
 options(stringsAsFactors = FALSE);
-allowWGCNAThreads() 
+allowWGCNAThreads()
 
-path = c("/home/y3zuo/gpfs/HRM-THC/WGCNA/")
+path = c("./WGCNA/")
 name <- c("HRM-THC-wgcna")
 source <- "NAcc"
 setwd(file.path(path, name))
-input_paths = c("/home/y3zuo/gpfs/HRM-THC/WGCNA/")
+input_paths = c("./WGCNA/")
 files = list.files(input_paths)
 
 for (f in files){
@@ -164,9 +163,9 @@ library(WriteXLS)
 
 dbs <- c("KEGG_2021_Human", "GO_Biological_Process_2021", "BioCarta_2016", "Reactome_2022")
 
-input_paths = "~/Desktop/HRM-THC-snRNA-seq/WGCNA-RNA/HGNC_outputs/"
+input_paths = "./WGCNA-RNA/HGNC_outputs/"
 files = list.files(input_paths)
-outpath = "~/Desktop/HRM-THC-snRNA-seq/WGCNA-RNA/Module\ annotation/"
+outpath = "./WGCNA-RNA/Module\ annotation/"
 
 for (f in files){
 
@@ -193,3 +192,39 @@ for (f in files){
     score <- round(sum(return.score)/length(return.score), 3)
     WriteXLS(result, paste0(outpath, filename, "_", score, "_enrichR_results.xlsx"), names(result), row.names = TRUE)
 }
+
+# ============================================================
+# Visualization: module pathway annotation barplots
+#
+# Matches manuscript Fig. 4B-C (Zuo et al., bioRxiv 2025.04.03.646846):
+# "(B) Pathway enrichment analysis of genes in the NB-1_blue module.
+#  (C) Pathway enrichment analysis of genes in the D1-MSN-1_turquoise
+#  module. Bar plots in (B) and (C) show enriched pathways ranked by
+#  -log10(FDR)."
+# Note: at the time these WGCNA module CSVs were generated, the NB-1
+# cluster was still labeled GABA-2 (renamed to NB-1 later in the
+# pipeline, see 20250324_rename.txt) -- so NB-1_blue = GABA-2_blue.
+# ============================================================
+
+library(ggplot2)
+library(stringr)
+
+module_pathway_barplot <- function(df) {
+  df$FDR <- -log10(df$FDR)
+  df$Pathways <- factor(df$Pathways, levels = df$Pathways[order(df$FDR)])
+  ggplot(df, aes(x = Pathways, y = FDR)) +
+    geom_bar(stat = "identity", color = "white", fill = "#7dabf5") + theme_classic() + coord_flip() +
+    theme(text = element_text(size = 16), axis.text = element_text(size = 12)) +
+    theme(legend.position = "none") + labs(x = "Pathway Terms", y = "-log10(FDR)") +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 50)) +
+    geom_hline(yintercept = 1.3, linetype = "dashed", color = "red", size = 1)
+}
+
+# Fig. 4C -- D1-MSN-1_turquoise module
+df <- read.csv("./WGCNA-RNA/Data/D1.MSN-1/D1.MSN-1_turquoise-anno.csv")
+module_pathway_barplot(df)
+
+# Fig. 4B -- NB-1_blue module (saved under its pre-rename label, GABA-2_blue)
+df <- read.csv("./WGCNA-RNA/Data/GABA-2/GABA-2_blue-anno.csv")
+module_pathway_barplot(df)
+

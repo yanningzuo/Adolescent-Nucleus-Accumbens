@@ -13,7 +13,7 @@ plan("multicore", workers = 12)
 plan()
 options(future.globals.maxSize = 200 * 1024 ^ 3) # for 100 Gb RAM
 
-setwd("/home/y3zuo/gpfs/HRM-THC/Merged")
+setwd("./Merged")
 load("20230430_61911.RData")
 
 # Data prep
@@ -22,10 +22,10 @@ Idents(object = data) <- data@meta.data[["coarse.celltype"]]
 group.cells <- WhichCells(object = data, idents = "GABA")
 exprMat <- as.matrix(x = data@assays[["RNA"]]@data[, group.cells])
 Idents(object = data) <- data@meta.data[["detailed.celltype"]]
-cellInfo <- data.frame(seuratCluster = Idents(data)) 
+cellInfo <- data.frame(seuratCluster = Idents(data))
 
 # Initialize settings
-setwd("/home/y3zuo/gpfs")
+setwd(".")
 org <- "mgi"
 dbDir <- "cisTarget_databases"
 myDatasetTitle <- "GABA-all"
@@ -40,7 +40,7 @@ scenicOptions <- initializeScenic(org = "mgi", dbDir = "cisTarget_databases", da
 motifAnnotations_mgi <- motifAnnotations
 scenicOptions@settings$seed <- 12
 
-saveRDS(scenicOptions, file="int/scenicOptions.Rds") 
+saveRDS(scenicOptions, file="int/scenicOptions.Rds")
 
 # Co-expression network
 genesKept <- geneFiltering(exprMat, scenicOptions, minCountsPerGene=3*.01*ncol(exprMat), minSamples=ncol(exprMat)*.01)
@@ -48,11 +48,11 @@ exprMat_filtered <- exprMat[genesKept, ]
 
 runCorrelation(exprMat_filtered, scenicOptions)
 
-exprMat_filtered_log <- log2(exprMat_filtered+1) 
+exprMat_filtered_log <- log2(exprMat_filtered+1)
 runGenie3(exprMat_filtered_log, scenicOptions)
 
 # Build and score the GRN
-setwd("/gpfs/data01/teleselab/y3zuo")
+setwd(".")
 exprMat_log <- log2(exprMat+1)
 
 scenicOptions@settings$verbose <- TRUE
@@ -60,7 +60,7 @@ scenicOptions@settings$nCores <- 12
 scenicOptions@settings$seed <- 12
 
 scenicOptions <- runSCENIC_1_coexNetwork2modules(scenicOptions)
-scenicOptions <- runSCENIC_2_createRegulons(scenicOptions, minGenes = 20) 
+scenicOptions <- runSCENIC_2_createRegulons(scenicOptions, minGenes = 20)
 scenicOptions <- runSCENIC_3_scoreCells(scenicOptions, exprMat_log)
 
 export2loom(scenicOptions, exprMat)
@@ -68,8 +68,8 @@ save.image(file = paste0("scenic-", myDatasetTitle, ".RData"))
 
 library(SCopeLoomR)
 
-setwd("/Volumes/Elements/HRM-THC-snRNA-seq/Archive/Scenic/scenic-gaba-all-20231210")
-loom <- open_loom("/Volumes/Elements/HRM-THC-snRNA-seq/Archive/Scenic/scenic-gaba-all-20231210/output/scenic.loom")
+setwd("./Archive/Scenic/scenic-gaba-all-20231210")
+loom <- open_loom("./Archive/Scenic/scenic-gaba-all-20231210/output/scenic.loom")
 
 # Read information from loom file:
 regulons_incidMat <- get_regulons(loom)
@@ -79,7 +79,7 @@ regulonsAucThresholds <- get_regulon_thresholds(loom)
 regulonsAUC <- regulonsAUC[onlyNonDuplicatedExtended(rownames(regulonsAUC)),]
 embeddings <- get_embeddings(loom)
 
-load("/Volumes/Elements/HRM-THC-snRNA-seq/Archive/Scenic/scenic-gaba-all-20231210/scenic-GABA-all.RData")
+load("./Archive/Scenic/scenic-gaba-all-20231210/scenic-GABA-all.RData")
 Idents(object = data) <- data@meta.data[["detailed.celltype"]]
 cellInfo <- data.frame(seuratCluster=Idents(data))
 colnames(cellInfo) <- 'CellType'

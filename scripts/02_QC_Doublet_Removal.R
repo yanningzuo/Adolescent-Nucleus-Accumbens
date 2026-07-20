@@ -1,4 +1,4 @@
-setwd("~/Desktop/HRM-THC-snRNA-seq/Merged")
+setwd("./Merged")
 library(Seurat)
 library(dplyr)
 library(ggplot2)
