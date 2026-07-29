@@ -66,7 +66,10 @@ draw_colnames_45 <- function (coln, gaps, ...) {
     return(res)}
 
 ## 'Overwrite' default draw_colnames with your own version
-assignInNamespace(x="draw_colnames", value="draw_colnames_45",
+## (value must be the function object, not a quoted string -- assignInNamespace()
+## with a string here would make every later pheatmap() call crash, since
+## pheatmap calls draw_colnames() internally to render column labels)
+assignInNamespace(x="draw_colnames", value=draw_colnames_45,
 ns=asNamespace("pheatmap"))
 
 # Z score across all module's correlation r

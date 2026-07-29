@@ -134,6 +134,11 @@ VlnPlot(data, celltype.markers, stack = TRUE) +
         theme(legend.position = "none") + labs(y = "")
 
 # fetch MSN subtype markers
+# NOTE: this snapshot labels the GABA-2 cluster by its Tiam2+ marker, unlike the
+# Igfbpl1+ label used in the previous VlnPlot block above (from `data` as it
+# stood after the earlier renaming steps) -- the levels<- call below only
+# resolves if `data` actually comes from this different snapshot, hence the load.
+load("./Merged/20230910.RData")
 
 levels(data) <- rev(c("D1.MSN-1","D1.MSN-2", "D1.MSN-3","D1.MSN-4","D1.MSN-5",               "D2.MSN-1","D2.MSN-2","D2.MSN-3", "D3.MSN",
                "GABA-1 (Cdh18+)","GABA-2 (Tiam2+)","GABA-3 (St18+ Kit+)","GABA-4 (Cdh9+)","GABA-5 (Vip+ Cck+)","GABA-6 (Nos1+ Npy+)","GABA-7 (Calb2+)","GABA-8 (Chat+)", "NB",               "Ol-1","Ol-2","OPC",               "Ast-1","Ast-2","Ast-3", "Mg", "Mu-Endo"))
