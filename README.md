@@ -17,6 +17,7 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 * **SCENIC:** Gene regulatory network inference
 * **Monocle3:** Trajectory inference
 * **Mergeomics:** MSEA and Key Driver Analysis
+* **DESeq2:** pseudobulk DESeq analysis
 
 **Key Python Packages:**
 * **Scanpy (v. 1.9.3):** Python Single Cell analysis framework
@@ -41,6 +42,7 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 * **11_SCENIC_Regulon_Analysis.R**: Transcription factor networks.
 * **12_DEG_Bootstrapping/**: DEG analysis for treatment groups using bootstrapping. (Directory)
 * **13_LIANA+_C2C_Analysis.ipynb:** Liana+ and cell2cell based cell-cell communication factorization analysis.
+* **14_DESeq2_pseudobulk.R:** DESeq2_pseudobulk analysis
 
 
 
