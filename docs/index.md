@@ -1,6 +1,6 @@
 # HRM-THC snRNA-seq Analysis Pipeline Documentation
 
-This document provides a detailed overview of the analysis workflow for the HRM-THC snRNA-seq project. The pipeline is modularized into **11 sequential steps**, each implemented as an R script in the `scripts/` directory. 
+This document provides a detailed overview of the analysis workflow for the HRM-THC snRNA-seq project. The pipeline is modularized into **14 sequential steps**, each implemented as an R script, directory, or notebook in the `scripts/` directory. 
 
 ---
 
@@ -89,14 +89,14 @@ This document provides a detailed overview of the analysis workflow for the HRM-
 
 
 
-## 9. Cross-Age Conservation Analysis
+## 9. Conservation Analysis (Cross-Age and Cross-Species)
 
-**Script:** `09_CrossAge_Conservation_Analysis.R`
+**Script:** `09_Conservation_Analysis.R`
 
-* **Purpose:** Compares the transcriptomic landscape of Adolescent NAc against Adult NAc (P70). 
+* **Purpose:** **Part 1 (cross-age):** compares the transcriptomic landscape of Adolescent NAc against Adult NAc (P70, GSE118020). **Part 2 (cross-species):** compares Adolescent Mouse NAc against Adult Human NAc (Tran et al., n = 8 donors) — manuscript Fig. S10.
 
 
-* **Key Steps:** Generates cell-type specific t-statistics for both datasets and uses **Pearson Correlation** to determine if cellular identities and marker genes are conserved across development. 
+* **Key Steps:** Generates cell-type specific t-statistics for each dataset and uses **Pearson Correlation** over the union of the top-100 upregulated marker genes per cell type to determine if cellular identities are conserved across development (Part 1) and across species via mouse-human ortholog mapping (Part 2). Both parts share the same statistical helper functions, defined once at the top of the script.
 
 
 
@@ -133,8 +133,17 @@ This document provides a detailed overview of the analysis workflow for the HRM-
 
 
 * **Key Steps:** Uses Liana+ to construct a 4 dimensional tensor across contexts (Treatments), sender cell types, reciever cell types, and ligand-receptor pairs.
+
+## 14. DESeq2 Pseudobulk Analysis
+
+**Script:** `14_DESeq2_pseudobulk.R`
+
+* **Purpose:** Cross-validates the single-cell-level DEG calls (Section 4) with a pseudobulk approach, which is more robust to single-cell pseudoreplication.
+
+
+* **Key Steps:** Aggregates raw counts per cell type per sample into pseudobulk profiles, then runs **DESeq2** (`~ libsize + Genotype + Treatment + Genotype:Treatment`) at both broad and detailed cell-type resolution to identify Treatment, Genotype, and Genotype x Treatment Interaction DEGs. Produces DEG count bar plots, volcano plots, and a hypergeometric overlap test against the single-cell DEG calls from Section 4.
 ---
 
 ## Running the Pipeline
 
-Execute the scripts in the numerical order listed above (01 to 13). Ensure all file paths in the `load()` and `read.csv()` functions are updated to reflect your local environment or server directory structure.
+Execute the scripts in the numerical order listed above (01 to 14). Ensure all file paths in the `load()` and `read.csv()` functions are updated to reflect your local environment or server directory structure.

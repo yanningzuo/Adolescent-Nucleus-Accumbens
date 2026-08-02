@@ -37,7 +37,7 @@ This repository provides a comprehensive pipeline for processing and analyzing s
 * **06_WGCNA_Trait_Correlation.R**: Module-trait associations.
 * **07_Mergeomics_MSEA_KDA.R**: GWAS integration and hub gene identification.
 * **08_Monocle3_Trajectory_Analysis.R**: Pseudotime inference.
-* **09_CrossAge_Conservation_Analysis.R**: Adolescent vs. Adult comparison.
+* **09_Conservation_Analysis.R**: Adolescent vs. Adult mouse, and vs. Adult Human NAc conservation (Fig. S10).
 * **10_LIANA_Communication_Analysis.R**: Ligand-receptor signaling.
 * **11_SCENIC_Regulon_Analysis.R**: Transcription factor networks.
 * **12_DEG_Bootstrapping/**: DEG analysis for treatment groups using bootstrapping. (Directory)
@@ -61,7 +61,7 @@ cd Adolescent-Nucleus-Accumbens
 * Install required Python packages.
 
 3. **Run the Pipeline:**
-* Execute each R script in sequential order (01 to 13).
+* Execute each R script in sequential order (01 to 14).
 * **Note:** Update `setwd()` and file paths in each script to match your local server environment.
 
 
