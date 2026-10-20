@@ -106,7 +106,7 @@ write.csv(cor, "./WGCNA-RNA/all-moduleTraitCor.csv")
 
 z.all = data.frame(Genotype = (cor$Genotype - mean(cor$Genotype))/sd(cor$Genotype), Treatment = (cor$Treatment - mean(cor$Treatment))/sd(cor$Treatment))
 rownames(z.all) = cor$X
-write.csv(mod, "./WGCNA-RNA/all-moduleCor-Z.csv")
+write.csv(z.all, "./WGCNA-RNA/all-moduleCor-Z.csv")
 
 # all sig modules
 
